@@ -1,6 +1,10 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { fileURLToPath } from "node:url";
-import { loadClrty1Config, probeClrty1, CLRTY1_CHAIN_ID } from "./clrty1.js";
+import {
+  loadClrty1Config,
+  getClrty1ConnectionReport,
+  CLRTY1_CHAIN_ID,
+} from "./clrty1.js";
 import { planRoute, type RouteRequest } from "./router.js";
 import { validateEbpfPolicy } from "./security/validate_ebpf.js";
 import { poolLoopsVersion } from "./liquidity/pool_loops.js";
@@ -29,13 +33,13 @@ export function createApp() {
 
       if (req.method === "GET" && url.pathname === "/health") {
         const cfg = loadClrty1Config();
-        const probe = await probeClrty1(cfg);
+        const clrty1 = await getClrty1ConnectionReport(cfg);
         const ebpf = validateEbpfPolicy();
         return send(res, 200, {
           ok: true,
           service: "CLRTY-Global-Router",
           chainId: CLRTY1_CHAIN_ID,
-          clrty1: probe,
+          clrty1,
           ebpf_policy: {
             ok: ebpf.ok,
             version: ebpf.version,
