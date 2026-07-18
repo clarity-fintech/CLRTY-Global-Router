@@ -1,0 +1,19 @@
+{
+  "skill_id": "CLRTY-GR-001",
+  "name": "CLRTY Global Router",
+  "components": [
+    "https://www.clarity-fintech.com/"
+  ],
+  "operational_logic": {
+    "intent": "Prefer CLRTY-1 native routes with optional pool quote",
+    "execution_path": "Route plan -> CLRTY-1 native hop first -> deferred bridges",
+    "substrate": "CLRTY-1"
+  },
+  "security_hardening": "eBPF-monitored socket connection to CLRTY-1 RPC and bridge adapters",
+  "clrty1": {
+    "chain_id": "clrty-1",
+    "numeric_chain_id": 1202,
+    "denom": "uclrty",
+    "rpc_env": "CLRTY_L1_RPC"
+  }
+}

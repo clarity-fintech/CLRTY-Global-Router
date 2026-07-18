@@ -12,12 +12,15 @@ import {
 import { quoteCcipTransfer, ccipConfigured } from "./adapters/ccip.js";
 import { quoteOneInch, oneInchConfigured } from "./adapters/oneinch.js";
 import { planCustodyHop, fireblocksConfigured } from "./adapters/fireblocks.js";
+import { runPoolLoop, type PoolIntent } from "./liquidity/pool_loops.js";
 
 export type RouteRequest = {
   from: string;
   to: string;
   amount: string;
   asset?: string;
+  /** When true (or CLRTY_POOL_QUOTE=1), attach a mock CLRTY pool quote. */
+  poolQuote?: boolean;
 };
 
 export type RouteHop = {
@@ -46,6 +49,7 @@ export type RoutePlan = {
     tipHeight?: number | string;
     rpcUrl: string;
   };
+  poolQuote?: PoolIntent;
   notes: string[];
 };
 
@@ -138,6 +142,20 @@ export async function planRoute(
     detail: { ...custody },
   });
 
+  let poolQuote: PoolIntent | undefined;
+  const wantPool =
+    req.poolQuote === true || env.CLRTY_POOL_QUOTE === "1";
+  if (wantPool) {
+    const poolAsset =
+      asset.toUpperCase() === "USDT" ? "USDT" : "CLRTY";
+    poolQuote = await runPoolLoop(
+      "quotePool",
+      { asset: poolAsset, amount: req.amount, dryRun: true },
+      cfg,
+    );
+    notes.push("Optional CLRTY pool quote attached via runPoolLoop(quotePool)");
+  }
+
   return {
     ok: true,
     preference: "clrty1_native_first",
@@ -158,6 +176,7 @@ export async function planRoute(
       tipHeight: probe.tipHeight,
       rpcUrl: probe.rpcUrl,
     },
+    poolQuote,
     notes,
   };
 }

@@ -19,6 +19,21 @@ describe("planRoute", () => {
     expect(plan.hops.some((h) => h.kind === "fireblocks_custody")).toBe(true);
   });
 
+  it("optionally attaches runPoolLoop quote", async () => {
+    const plan = await planRoute(
+      {
+        from: "clrty-1",
+        to: "clrty-1",
+        amount: "1000",
+        asset: "CLRTY",
+        poolQuote: true,
+      },
+      { CLRTY_RPC_SMOKE: "0", CLRTY_L1_RPC: "http://127.0.0.1:9" },
+    );
+    expect(plan.poolQuote?.action).toBe("quotePool");
+    expect(plan.poolQuote?.status).toBe("finalized");
+  });
+
   it("marks bridge hops as mock when vendor keys unset", async () => {
     const env = {
       CLRTY_RPC_SMOKE: "0",
