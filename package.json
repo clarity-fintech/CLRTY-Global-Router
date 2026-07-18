@@ -1,0 +1,25 @@
+{
+  "name": "@clarity-fintech/clrty-global-router",
+  "version": "0.1.0",
+  "description": "CLRTY-1 L1-first route planner with mocked CCIP / 1inch / Fireblocks adapters",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts",
+    "test": "CLRTY_RPC_SMOKE=0 vitest run",
+    "smoke": "CLRTY_RPC_SMOKE=1 vitest run tests/smoke.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "license": "Apache-2.0"
+}
