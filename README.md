@@ -1,5 +1,25 @@
 # CLRTY-Global-Router
 
+
+## MIS kernel (`misc`) — required
+
+Sole active CLRTY-1 / Moniversive compiler kernel. **Not Python.**
+
+```bash
+# Download from clarity-fintech/CLRTY-MIS-Kernel
+git clone https://github.com/clarity-fintech/CLRTY-MIS-Kernel.git
+cd CLRTY-MIS-Kernel && bash scripts/download_misc_kernel.sh
+./bin/misc path.mis --check --compact-letters
+```
+
+Or from the Developer Kit: [`dist/mis-kernel-misc.zip`](https://github.com/clarity-fintech/developer_kit/raw/main/dist/mis-kernel-misc.zip)
+
+Policy: foreign kernels (`python3 clrtyc`, `solc`, `forge`, `hardhat`) → **hard error**. Settlement **clrty-1 / 1202**.
+
+L1-first route planner for **CLRTY-1** (`clrty-1` / `1202` / `uclrty`).
+
+Cross-chain bridges (Chainlink CCIP, 1inch aggregation) are **deferred** at launch. This service always plans a CLRTY-1 native settlement hop first, then optionally attaches custody / bridge hops. Adapter modes are marked `mock` or `live` honestly — never claim a live bridge when keys are unset.
+
 L1-first route planner for **CLRTY-1** (`clrty-1` / `1202` / `uclrty`).
 
 Cross-chain bridges (Chainlink CCIP, 1inch aggregation) are **deferred** at launch. This service always plans a CLRTY-1 native settlement hop first, then optionally attaches custody / bridge hops. Adapter modes are marked `mock` or `live` honestly — never claim a live bridge when keys are unset.
